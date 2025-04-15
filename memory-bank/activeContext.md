@@ -1,36 +1,29 @@
 # Active Context: zen-json-patch
 
 ## Current Focus
-- **Primary:** Resolve the blocker by implementing a correct and performant array diff algorithm (e.g., Myers diff) in `src/arrayDiff.ts`.
-- Expand benchmark comparisons to include more libraries once array diff is stable.
+- **Prepare Comprehensive Test Suite:** Write extensive test cases in `src/arrayDiff.spec.ts` and adjust RFC examples in `src/rfc6902.spec.ts` to define the **ideal** expected output (e.g., using `move` operations), regardless of the current naive implementation's capabilities. The goal is to have a complete target for future algorithm development.
 
 ## Recent Changes
-- **Fixed `src/rfc6902.spec.ts` Test A.7:** Aligned the `actualNaiveExpected` variable with the actual output of the current naive `arrayDiff` implementation (which produces `remove` + `add` for this specific move case, not the previously expected `replace` operations). This makes the test pass by correctly reflecting the *current* naive behavior, although the ideal `move` operation is still pending implementation.
-- Installed `fast-json-patch`, `deep-diff`, `jsondiffpatch`, `json-diff`, `rfc6902`, `just-diff` as dev dependencies.
-- Modified `bench/array-diff.bench.ts` and `bench/object-diff.bench.ts` to include `just-diff`, `json-diff`, `fast-json-patch` using dynamic imports.
-- Confirmed `"type": "module"` and top-level `await` work for benchmarks.
-- Kept `.js` extensions for relative imports and `@ts-ignore` for dynamic import type issues.
-- Ran benchmarks (`npm run bench`) confirming inclusion of new libs.
-- Ran `npm run size`: confirmed bundles are well within limits. Fixed build errors related to missing `.js` extensions.
-- Fixed skipped `fast-json-diff` tests in `bench/object-diff-simple.bench.ts` using top-level `await`.
+- **Updated RFC 6902 Tests (A.6, A.7):** Modified tests A.6 and A.7 in `src/rfc6902.spec.ts` to assert the ideal `move` operation output, rather than the output of naive algorithms.
+- **Expanded `src/arrayDiff.spec.ts`:** Added more test cases covering various array manipulations (swaps, moves, complex mixes, duplicates) with ideal expected outputs (often involving `move`).
+- **Pivoted Array Diff Strategy:** Temporarily using a **naive** array diff implementation in `src/arrayDiff.ts` for basic stability, deferring optimized algorithm implementation.
+- Created initial `README.md`.
 
 ## Next Steps
-- **Primary:** Debug or reimplement the array diff algorithm in `src/arrayDiff.ts` to pass all unit tests, including generating correct patches for array element moves (potentially involving `move` ops or more optimal `add`/`remove` sequences than the current naive version).
-- **Alternative (If debugging fails):** Research and implement a different, potentially simpler but correct, array diffing algorithm.
-- **Deferred:** Benchmarking (`npm run bench`) until the array diff implementation passes tests reliably.
-- **Deferred:** Add basic README.md.
+- **Run Tests:** Execute `npm test` to confirm the syntax of the updated test files and observe the *expected* failures against the current naive array diff implementation.
+- **Memory Bank Update:** Update `progress.md`.
+- **Handover:** The test suite is now prepared with ideal expectations. The next major step is for another process/AI to implement the optimized array diff algorithm in `src/arrayDiff.ts` to pass these defined tests.
 
 ## Active Decisions
+- **Defining Ideal Test Expectations:** Prioritizing the definition of a comprehensive test suite with optimal JSON Patch outputs (`move` ops etc.) as the target specification.
+- **Current:** Using a **naive** array diff implementation in `src/arrayDiff.ts` temporarily.
 - Benchmarking against `fast-json-diff`, `just-diff`, `json-diff`, `fast-json-patch`.
 - Using dynamic `await import()` for optional benchmark dependencies.
-- Using `"type": "module"` in `package.json`.
-- Adding `.js` extensions to relative imports.
+- Using `"type": "module"`.
 - Using `vitest` for testing and benchmarking.
 - Using `tsup` for building.
-- **Temporary:** Using a naive array diff implementation (which passes adjusted tests but isn't optimal).
 - Added `size-limit` for bundle size monitoring.
 
 ## Blockers
-- **RESOLVED (Test expectation adjusted):** Test A.7 was failing due to a mismatch between the actual naive diff output and the expected naive diff output in the test definition.
-- **Primary Blocker:** The array diff implementation in `src/arrayDiff.ts` does not yet correctly implement an optimal algorithm (like Myers Diff) needed for efficient patch generation (especially `move` ops) and is the main focus.
-- Persistent TypeScript type resolution issues with dynamically imported libraries (worked around with `@ts-ignore`).
+- **Implementation Gap:** The current naive array diff implementation in `src/arrayDiff.ts` will not pass the newly defined ideal test cases (especially those expecting `move`). The blocker is the *implementation* of the optimized algorithm, not the test definition.
+- TypeScript type resolution issues with dynamically imported libraries (worked around with `@ts-ignore`).

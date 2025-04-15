@@ -1,32 +1,29 @@
 # Progress Tracker: zen-json-patch
 
 ## Current Status
-- Basic diff logic implemented (object comparison, naive array diff).
-- Unit and integration tests passing.
-- Benchmarking suite set up with `vitest bench`, comparing against `fast-json-diff`.
-- Benchmark output structure improved for clarity.
+- Basic diff logic implemented (object comparison).
+- **Temporary naive array diff remains in `src/arrayDiff.ts`.**
+- **Comprehensive test suite (`src/arrayDiff.spec.ts`, `src/rfc6902.spec.ts`) updated with IDEAL expected outputs (including `move` operations).** These tests are expected to FAIL against the naive implementation.
+- Benchmarking suite set up but deferred.
 
 ## What Works
 - Initial project structure set up (npm, TS, Git).
 - Memory Bank initialized.
-- Core diffing logic structure (`diff`, `compareValues`, `compareObjects` in `src/index.ts`).
+- Core diffing logic structure (`diff`, `compareValues`, `compareObjects`).
 - JSON Pointer path helpers (`src/path.ts`) with passing unit tests.
-- Naive array diff implementation (`src/arrayDiff.ts`) with passing unit tests.
-- Object comparison logic (`compareObjects`) via `diff` function passes unit and integration tests.
-- Integration tests using RFC 6902 examples (`src/rfc6902.spec.ts`).
-- Benchmarking configured and running (`bench/*`, `vitest.config.ts`).
+- Object comparison logic (`compareObjects`).
+- **Test suite definition complete, defining the target behavior.**
+- Basic benchmarking configuration.
+- Basic `README.md` created.
 
 ## What's Left (High Level)
-- **Implement performant array diff algorithm (replace naive version).** [BLOCKED]
-- Write README documentation.
-- Iterate on performance optimizations based on benchmark results (once array diff is optimized).
+- **Implement performant array diff algorithm in `src/arrayDiff.ts` to pass the defined ideal tests.** (Primary Task for next step/AI)
+- Enhance README documentation.
+- Run benchmarks and iterate on performance optimizations.
 
 ## Known Issues / Blockers
-- **BLOCKER:** The Myers diff implementation in `src/arrayDiff.ts` is fundamentally flawed. Multiple attempts to implement and fix it have resulted in consistently failing tests (`npm test`), particularly around backtracking and patch index generation. The algorithm requires expert debugging or a different approach.
-- Array diff performance is currently poor due to the (now reverted or broken) implementation attempts.
+- **Implementation Gap:** The current naive array diff implementation in `src/arrayDiff.ts` *will not* pass the comprehensive test suite which expects optimal diffs (e.g., `move` operations). This is the main work item remaining.
 
 ## Immediate Next Steps (from activeContext.md)
-- **Requires User Intervention/Debugging:** The Myers diff implementation in `src/arrayDiff.ts` needs expert review and debugging.
-- **Alternative (If debugging fails):** Consider implementing a different array diffing algorithm.
-- **Deferred:** Benchmarking (`npm run bench`).
-- **Deferred:** Add basic README.md.
+- **Run Tests:** Confirm syntax and observe expected failures.
+- **Handover:** The test suite is ready for the implementation phase.
