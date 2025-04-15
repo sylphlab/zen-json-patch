@@ -22,13 +22,13 @@
     // "lib": ["es2022", "dom", "dom.iterable"],
 
     /* If you're building for BOTH Node.js and the DOM: */
-    "lib": ["es2022"], // Keep minimal for library, adjust if DOM access needed
-    "module": "CommonJS", // CommonJS for broad Node compatibility initially
-    "outDir": "./dist", // Output directory for compiled JS
-    "rootDir": "./src", // Source directory
+    "lib": ["es2022"],
+    "module": "CommonJS",
+    "outDir": "./dist",
+    "rootDir": ".", // Set rootDir to project root to include src and bench
 
     /* Module Resolution Options */
-    "moduleResolution": "node", // Classic Node resolution
+    "moduleResolution": "node",
     // "baseUrl": "./", // Base directory for non-relative module paths
     // "paths": {}, // Path mapping (optional)
 
@@ -41,9 +41,9 @@
     "stripInternal": true, // Don't emit declarations for @internal marked code
 
     /* Project Options */
-    "removeComments": false, // Keep comments in JS output (can be removed for production)
-    "importHelpers": true, // Use tslib helpers
+    "removeComments": false,
+    "importHelpers": true,
   },
-  "include": ["src/**/*"], // Include all files in the src directory
-  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts", "**/__tests__"] // Exclude node_modules, output dir, and test files
+  "include": ["src/**/*", "bench/**/*"], // Also include benchmark files
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts", "**/__tests__"]
 }
