@@ -1,0 +1,25 @@
+# Project Specific Rules: zen-json-patch
+
+## 1. Performance Focus
+- **Micro-optimizations:** Embrace them when justified by benchmarks. V8 optimization quirks (hidden classes, inline caches) are relevant.
+- **Algorithm Choice:** Prioritize speed over absolute minimal diff size if a significant performance gain is achievable. E.g., a slightly larger patch generated much faster might be preferable.
+- **Benchmarking:** Must be rigorous and cover diverse JSON structures (deeply nested, wide objects, large arrays, mixed types). Compare against `fast_json_diff` as the primary target.
+
+## 2. Code Style
+- Follow standard TypeScript best practices (use Playbook guidelines).
+- Prefer functional programming approaches where they don't impede performance significantly.
+- Keep functions small and focused.
+- Use `const` by default, `let` only when reassignment is necessary.
+- Strict null checks (`strictNullChecks: true` in tsconfig).
+
+## 3. Dependencies
+- Minimize runtime dependencies to zero if possible.
+- Scrutinize any potential development dependency for its necessity and impact.
+
+## 4. Testing
+- Test cases must include edge cases for RFC 6902 (e.g., keys with special characters like `/`, `~`).
+- Benchmarks should run as part of the CI/testing process if feasible.
+
+## 5. Documentation
+- README must clearly state the performance goals and benchmark results.
+- API documentation should be generated (e.g., using TSDoc).
