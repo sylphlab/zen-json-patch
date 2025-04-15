@@ -1,16 +1,19 @@
 import { bench, describe } from 'vitest';
-import { diff as zenDiff } from '../src/index'; // Import our diff function
+import { diff as zenDiff } from '../src/index.js'; // Added .js extension
+import type { Operation } from '../src/types.js'; // Added .js extension
 
-// Dynamically import fast-json-diff only during benchmark execution
-let fastDiff: Function | null = null;
-// @ts-ignore - Suppress module resolution error due to potential fast-json-diff export/typing issue
-import('fast-json-diff').then((module: { diff?: (a: any, b: any) => any[] }) => {
+// Dynamically import fast-json-diff using top-level await
+let fastDiff: ((a: any, b: any) => Operation[]) | null = null;
+try {
+    // @ts-ignore - Keep ignoring persistent type resolution issue
+    const module = await import('fast-json-diff');
     if (module && typeof module.diff === 'function') {
-        fastDiff = module.diff;
+        fastDiff = module.diff as (a: any, b: any) => Operation[];
     }
-}).catch(e => {
-    // Silent failure if fast-json-diff not installed
-});
+} catch (e) {
+    console.warn("Could not load 'fast-json-diff' for comparison. Benchmarks requiring it will be skipped.", e);
+    fastDiff = null;
+}
 
 // Helper to conditionally add fastDiff benchmarks
 const addFastDiffBench = (name: string, fn: () => void) => {

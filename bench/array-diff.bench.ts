@@ -1,16 +1,20 @@
 import { bench, describe } from 'vitest';
-import { diff as zenDiff } from '../src/index'; // Import our diff function
+import { diff as zenDiff } from '../src/index.js'; // Added .js extension
+import type { Operation } from '../src/types.js'; // Added .js extension
 
-// Dynamically import fast-json-diff only during benchmark execution
-let fastDiff: ((a: any, b: any) => any[]) | null = null; // More specific type
-// @ts-ignore - Suppress module resolution error due to potential fast-json-diff export/typing issue
-import('fast-json-diff').then((module: { diff?: (a: any, b: any) => any[] }) => {
+// Dynamically import fast-json-diff using top-level await
+let fastDiff: ((a: any, b: any) => Operation[]) | null = null;
+try {
+    // @ts-ignore - Keep ignoring persistent type resolution issue
+    const module = await import('fast-json-diff');
     if (module && typeof module.diff === 'function') {
-        fastDiff = module.diff;
+        fastDiff = module.diff as (a: any, b: any) => Operation[];
     }
-}).catch(e => {
-    // Silent failure if fast-json-diff not installed
-});
+} catch (e) {
+    console.warn("Could not load 'fast-json-diff' for comparison. Benchmarks requiring it will be skipped.", e);
+    fastDiff = null; // Ensure it's null on failure
+}
+
 
 // Helper to conditionally add fastDiff benchmarks
 const addFastDiffBench = (name: string, fn: () => void) => {
@@ -74,7 +78,7 @@ describe('Array Diff Benchmarks', () => {
         bench('[Naive] zenDiff', () => {
             zenDiff(arrSimple1, arrSimpleAdd);
         });
-        addFastDiffBench('[Naive Compare] fastDiff', () => {
+        addFastDiffBench('fastDiff', () => { // Removed '[Naive Compare]' as it's now a direct comparison
             fastDiff!(arrSimple1, arrSimpleAdd);
         });
     });
@@ -83,7 +87,7 @@ describe('Array Diff Benchmarks', () => {
         bench('[Naive] zenDiff', () => {
             zenDiff(arrSimple1, arrSimpleRemove);
         });
-        addFastDiffBench('[Naive Compare] fastDiff', () => {
+        addFastDiffBench('fastDiff', () => { // Removed '[Naive Compare]'
             fastDiff!(arrSimple1, arrSimpleRemove);
         });
     });
@@ -101,7 +105,7 @@ describe('Array Diff Benchmarks', () => {
         bench('[Naive] zenDiff', () => { // Naive generates many replaces
             zenDiff(arrInternal1, arrInternalShuffle);
         });
-        addFastDiffBench('[Naive Compare] fastDiff', () => { // fast-diff likely smarter
+        addFastDiffBench('fastDiff', () => { // Removed '[Naive Compare]', fast-diff likely smarter
             fastDiff!(arrInternal1, arrInternalShuffle);
         });
     });
@@ -110,7 +114,7 @@ describe('Array Diff Benchmarks', () => {
          bench('[Naive] zenDiff', () => {
            zenDiff(largeArr1, largeArr2_AddEnd);
          });
-         addFastDiffBench('[Naive Compare] fastDiff', () => {
+         addFastDiffBench('fastDiff', () => { // Removed '[Naive Compare]'
            fastDiff!(largeArr1, largeArr2_AddEnd);
          });
     });
@@ -119,7 +123,7 @@ describe('Array Diff Benchmarks', () => {
          bench('[Naive] zenDiff', () => {
            zenDiff(largeArr1, largeArr2_RemoveEnd);
          });
-         addFastDiffBench('[Naive Compare] fastDiff', () => {
+         addFastDiffBench('fastDiff', () => { // Removed '[Naive Compare]'
            fastDiff!(largeArr1, largeArr2_RemoveEnd);
          });
     });
@@ -137,7 +141,7 @@ describe('Array Diff Benchmarks', () => {
         bench('[Naive] zenDiff', () => { // Naive generates many replaces
             zenDiff(largeArr1, largeArr2_ShuffleMid);
         });
-        addFastDiffBench('[Naive Compare] fastDiff', () => { // fast-diff likely smarter
+        addFastDiffBench('fastDiff', () => { // Removed '[Naive Compare]', fast-diff likely smarter
             fastDiff!(largeArr1, largeArr2_ShuffleMid);
         });
     });
