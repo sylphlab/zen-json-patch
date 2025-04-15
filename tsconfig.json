@@ -23,12 +23,12 @@
 
     /* If you're building for BOTH Node.js and the DOM: */
     "lib": ["es2022"],
-    "module": "CommonJS",
+    "module": "NodeNext", // Changed from CommonJS to support top-level await
     "outDir": "./dist",
     "rootDir": ".", // Set rootDir to project root to include src and bench
 
     /* Module Resolution Options */
-    "moduleResolution": "node",
+    // "moduleResolution": "NodeNext", // Removed - implicitly handled by module: NodeNext
     // "baseUrl": "./", // Base directory for non-relative module paths
     // "paths": {}, // Path mapping (optional)
 

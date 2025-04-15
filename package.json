@@ -6,8 +6,8 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "build": "tsc",
-    "bench": "npm run build && node dist/bench/object-diff.bench.js",
+    "build": "tsup src/index.ts --format esm,cjs --minify --sourcemap --dts",
+    "bench": "vitest bench",
     "prepublishOnly": "npm run build"
   },
   "keywords": [
@@ -22,13 +22,10 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/benchmark": "^2.1.5",
     "@types/node": "^22.14.1",
-    "benchmark": "^2.1.4",
+    "fast-json-diff": "^0.0.6",
+    "tsup": "^8.4.0",
     "typescript": "^5.8.3",
     "vitest": "^3.1.1"
-  },
-  "dependencies": {
-    "tslib": "^2.8.1"
   }
 }

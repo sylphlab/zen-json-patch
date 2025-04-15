@@ -34,7 +34,7 @@ export function compareArrays(arr1: any[], arr2: any[], path: string, operations
     // Simplest Naive Approach: If lengths differ, just replace the whole array.
     if (N !== M) {
         operations.push({ op: 'replace', path, value: arr2 });
-        console.warn(`[Naive Diff] Array lengths differ at path "${path}", replacing entire array.`);
+        // console.warn(`[Naive Diff] Array lengths differ at path "${path}", replacing entire array.`);
         return;
     }
 

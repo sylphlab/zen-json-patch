@@ -1,20 +1,22 @@
 # Technical Context: zen-json-patch
 
 ## 1. Core Technology Stack
-- **Language:** TypeScript (Strict mode enabled)
-- **Runtime:** Node.js (Latest LTS recommended for development and benchmarking)
+- **Language:** TypeScript (`strict: true`, `target: ES2022`, `module: NodeNext` in `tsconfig.json`)
+- **Runtime:** Node.js (Latest LTS recommended)
 - **Package Manager:** npm
-- **Build System:** TypeScript Compiler (`tsc`)
+- **Build System:** `tsup` (for generating ESM, CJS, and `.d.ts` files)
+- **Testing/Benchmarking:** `vitest`
 
-## 2. Key Dependencies (Initial)
+## 2. Key Dependencies
 - **Development:**
     - `typescript`
     - `@types/node`
-    - Testing framework (e.g., `jest`, `vitest` - TBD)
-    - Benchmarking library (e.g., `benchmark`)
+    - `vitest` (for testing and benchmarking)
+    - `tsup` (for building)
+    - `fast-json-diff` (for benchmark comparison)
     - Linting/Formatting (`eslint`, `prettier` - TBD)
 - **Runtime:**
-    - None initially. The goal is a self-contained library.
+    - None.
 
 ## 3. Development Environment
 - **OS:** Windows (as per Cline's environment), but code should be platform-agnostic.

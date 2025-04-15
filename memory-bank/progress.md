@@ -2,27 +2,28 @@
 
 ## Current Status
 - Basic diff logic implemented (object comparison, naive array diff).
-- Initial unit tests passed. Preparing for integration tests.
+- Unit and integration tests passing.
+- Benchmarking suite set up with `vitest bench`, comparing against `fast-json-diff`.
+- Benchmark output structure improved for clarity.
 
 ## What Works
 - Initial project structure set up (npm, TS, Git).
 - Memory Bank initialized.
 - Core diffing logic structure (`diff`, `compareValues`, `compareObjects` in `src/index.ts`).
 - JSON Pointer path helpers (`src/path.ts`) with passing unit tests.
-- Naive array diff implementation (`src/arrayDiff.ts`) with adjusted unit tests passing.
-- Object comparison logic (`compareObjects`) via `diff` function passes unit tests.
+- Naive array diff implementation (`src/arrayDiff.ts`) with passing unit tests.
+- Object comparison logic (`compareObjects`) via `diff` function passes unit and integration tests.
+- Integration tests using RFC 6902 examples (`src/rfc6902.spec.ts`).
+- Benchmarking configured and running (`bench/*`, `vitest.config.ts`).
 
 ## What's Left (High Level)
-- Add integration tests (RFC 6902 examples).
 - **Implement performant array diff algorithm (replace naive version).**
-- Develop benchmarking suite.
 - Write README documentation.
-- Benchmark against `fast_json_diff`.
-- Iterate on performance optimizations.
+- Iterate on performance optimizations based on benchmark results (once array diff is optimized).
 
 ## Known Issues / Blockers
 - Current array diff implementation (`src/arrayDiff.ts`) is naive and slow ("replace" for length changes). Performance optimization deferred.
 
 ## Immediate Next Steps (from activeContext.md)
-- Commit naive array diff implementation and adjusted tests.
-- Add integration tests using RFC 6902 examples (`src/rfc6902.spec.ts`).
+- Run benchmarks again (`npm run bench`) to verify cleaner output and structure.
+- Add basic README.md.
