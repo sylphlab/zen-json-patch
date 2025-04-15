@@ -1,29 +1,28 @@
 # Progress Tracker: zen-json-patch
 
 ## Current Status
-- Core diffing logic implemented (object comparison, Myers array diff).
-- Preparing for testing phase.
+- Basic diff logic implemented (object comparison, naive array diff).
+- Initial unit tests passed. Preparing for integration tests.
 
 ## What Works
 - Initial project structure set up (npm, TS, Git).
 - Memory Bank initialized.
 - Core diffing logic structure (`diff`, `compareValues`, `compareObjects` in `src/index.ts`).
-- JSON Pointer path helpers (`src/path.ts`).
-- Myers diff algorithm for arrays (`src/arrayDiff.ts`) implemented.
+- JSON Pointer path helpers (`src/path.ts`) with passing unit tests.
+- Naive array diff implementation (`src/arrayDiff.ts`) with adjusted unit tests passing.
+- Object comparison logic (`compareObjects`) via `diff` function passes unit tests.
 
 ## What's Left (High Level)
-- Develop comprehensive test suite (unit, integration, RFC vectors). Start with unit tests.
+- Add integration tests (RFC 6902 examples).
+- **Implement performant array diff algorithm (replace naive version).**
 - Develop benchmarking suite.
 - Write README documentation.
 - Benchmark against `fast_json_diff`.
-- Iterate on performance optimizations based on benchmarking.
+- Iterate on performance optimizations.
 
 ## Known Issues / Blockers
-- Myers diff implementation in `src/arrayDiff.ts` is complex and requires thorough testing.
+- Current array diff implementation (`src/arrayDiff.ts`) is naive and slow ("replace" for length changes). Performance optimization deferred.
 
 ## Immediate Next Steps (from activeContext.md)
-- Commit Myers diff implementation.
-- Install a testing framework (e.g., `vitest`).
-- Add basic unit tests for path helpers (`src/path.ts`).
-- Add basic unit tests for object comparison (`src/index.ts`).
-- Add basic unit tests for array comparison (`src/arrayDiff.ts`), starting with simple cases.
+- Commit naive array diff implementation and adjusted tests.
+- Add integration tests using RFC 6902 examples (`src/rfc6902.spec.ts`).
