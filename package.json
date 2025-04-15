@@ -24,7 +24,13 @@
   "description": "",
   "devDependencies": {
     "@types/node": "^22.14.1",
+    "deep-diff": "^1.0.2",
     "fast-json-diff": "^0.0.6",
+    "fast-json-patch": "^3.1.1",
+    "json-diff": "^1.0.6",
+    "jsondiffpatch": "^0.7.3",
+    "just-diff": "^6.0.2",
+    "rfc6902": "^5.1.2",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3",
     "vitest": "^3.1.1"

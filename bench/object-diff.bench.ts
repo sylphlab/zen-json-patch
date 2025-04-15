@@ -2,27 +2,49 @@ import { bench, describe } from 'vitest';
 import { diff as zenDiff } from '../src/index.js'; // Added .js extension
 import type { Operation } from '../src/types.js'; // Added .js extension
 
-// Dynamically import fast-json-diff using top-level await
-let fastDiff: ((a: any, b: any) => Operation[]) | null = null;
-try {
-    // @ts-ignore - Keep ignoring persistent type resolution issue
-    const module = await import('fast-json-diff');
-    if (module && typeof module.diff === 'function') {
-        fastDiff = module.diff as (a: any, b: any) => Operation[];
-    }
-} catch (e) {
-    console.warn("Could not load 'fast-json-diff' for comparison. Benchmarks requiring it will be skipped.", e);
-    fastDiff = null;
-}
+// --- Dynamic Imports ---
+let fastJsonDiffFn: ((a: any, b: any) => Operation[]) | null = null;
+let justDiffFn: ((a: any, b: any) => Operation[]) | null = null;
+let jsonDiffFn: ((a: any, b: any) => Operation[]) | null = null;
+let fastJsonPatchCompareFn: ((a: any, b: any) => Operation[]) | null = null;
 
-// Helper to conditionally add fastDiff benchmarks
-const addFastDiffBench = (name: string, fn: () => void) => {
-    if (fastDiff) {
-        bench(name, fn);
+try {
+    // @ts-ignore
+    const fastJsonDiffModule = await import('fast-json-diff');
+    if (fastJsonDiffModule?.diff) fastJsonDiffFn = fastJsonDiffModule.diff as any;
+} catch { console.warn("Could not load 'fast-json-diff'."); }
+
+try {
+    // @ts-ignore
+    const justDiffModule = await import('just-diff');
+    if (justDiffModule?.diff) justDiffFn = justDiffModule.diff as any;
+} catch { console.warn("Could not load 'just-diff'."); }
+
+try {
+    // @ts-ignore
+    const jsonDiffModule = await import('json-diff');
+     // json-diff's diff function might need specific handling/options, assuming basic usage
+    if (jsonDiffModule?.diff) jsonDiffFn = jsonDiffModule.diff as any;
+} catch { console.warn("Could not load 'json-diff'."); }
+
+try {
+    // @ts-ignore
+    const fastJsonPatchModule = await import('fast-json-patch');
+    if (fastJsonPatchModule?.compare) fastJsonPatchCompareFn = fastJsonPatchModule.compare as any;
+} catch { console.warn("Could not load 'fast-json-patch'."); }
+
+
+// --- Helper ---
+const addBenchmark = (libName: string, diffFn: Function | null, args: [any, any]) => {
+    if (diffFn) {
+        bench(libName, () => {
+            diffFn(args[0], args[1]);
+        });
     } else {
-        bench.skip(name + ' (skipped - fast-json-diff not loaded)', () => { });
+        bench.skip(`${libName} (skipped - library not loaded)`, () => {});
     }
 };
+
 
 // --- Test Data ---
 const simpleObj1 = { a: 1, b: "hello", c: true };
@@ -45,64 +67,61 @@ largeObj2['key500'] = 999; // One change
 largeObj2['newKey'] = 1001; // One addition
 delete (largeObj1 as any)['key100']; // One removal in obj1 for diffing vs obj2
 
-// --- Benchmark Structure ---
-// Grouping each zenDiff vs fastDiff pair in its own describe block
-// for direct fastest/slowest comparison on the same task.
-
+// --- Benchmarks ---
 describe('Object Diff Benchmarks', () => {
 
     describe('[Simple] Changes', () => {
-        bench('zenDiff', () => {
-            zenDiff(simpleObj1, simpleObj2);
-        });
-        addFastDiffBench('fastDiff', () => {
-            fastDiff!(simpleObj1, simpleObj2);
-        });
+        const args: [any, any] = [simpleObj1, simpleObj2];
+        addBenchmark('zenDiff', zenDiff, args);
+        addBenchmark('fast-json-diff', fastJsonDiffFn, args);
+        addBenchmark('just-diff', justDiffFn, args);
+        addBenchmark('json-diff', jsonDiffFn, args);
+        addBenchmark('fast-json-patch', fastJsonPatchCompareFn, args);
     });
 
     describe('[Simple] Identical', () => {
-        bench('zenDiff', () => {
-            zenDiff(simpleObj1, simpleObj3);
-        });
-        addFastDiffBench('fastDiff', () => {
-            fastDiff!(simpleObj1, simpleObj3);
-        });
+        const args: [any, any] = [simpleObj1, simpleObj3];
+        addBenchmark('zenDiff', zenDiff, args);
+        addBenchmark('fast-json-diff', fastJsonDiffFn, args);
+        addBenchmark('just-diff', justDiffFn, args);
+        addBenchmark('json-diff', jsonDiffFn, args);
+        addBenchmark('fast-json-patch', fastJsonPatchCompareFn, args);
     });
 
     describe('[Nested] Changes', () => {
-        bench('zenDiff', () => {
-            zenDiff(nestedObj1, nestedObj2);
-        });
-        addFastDiffBench('fastDiff', () => {
-            fastDiff!(nestedObj1, nestedObj2);
-        });
+        const args: [any, any] = [nestedObj1, nestedObj2];
+        addBenchmark('zenDiff', zenDiff, args);
+        addBenchmark('fast-json-diff', fastJsonDiffFn, args);
+        addBenchmark('just-diff', justDiffFn, args);
+        addBenchmark('json-diff', jsonDiffFn, args);
+        addBenchmark('fast-json-patch', fastJsonPatchCompareFn, args);
     });
 
      describe('[Nested] Identical', () => {
-        bench('zenDiff', () => {
-            zenDiff(nestedObj1, nestedObj3);
-        });
-        addFastDiffBench('fastDiff', () => {
-            fastDiff!(nestedObj1, nestedObj3);
-        });
+        const args: [any, any] = [nestedObj1, nestedObj3];
+        addBenchmark('zenDiff', zenDiff, args);
+        addBenchmark('fast-json-diff', fastJsonDiffFn, args);
+        addBenchmark('just-diff', justDiffFn, args);
+        addBenchmark('json-diff', jsonDiffFn, args);
+        addBenchmark('fast-json-patch', fastJsonPatchCompareFn, args);
     });
 
     describe('[Large] Few Changes', () => {
-        bench('zenDiff', () => {
-            zenDiff(largeObj1, largeObj2);
-        });
-        addFastDiffBench('fastDiff', () => {
-            fastDiff!(largeObj1, largeObj2);
-        });
+        const args: [any, any] = [largeObj1, largeObj2];
+        addBenchmark('zenDiff', zenDiff, args);
+        addBenchmark('fast-json-diff', fastJsonDiffFn, args);
+        addBenchmark('just-diff', justDiffFn, args);
+        addBenchmark('json-diff', jsonDiffFn, args);
+        addBenchmark('fast-json-patch', fastJsonPatchCompareFn, args);
     });
 
     describe('[Large] Identical', () => {
-        bench('zenDiff', () => {
-            zenDiff(largeObj1, largeObj3); // Comparing obj1 with identical obj3
-        });
-        addFastDiffBench('fastDiff', () => {
-            fastDiff!(largeObj1, largeObj3);
-        });
+        const args: [any, any] = [largeObj1, largeObj3];
+        addBenchmark('zenDiff', zenDiff, args);
+        addBenchmark('fast-json-diff', fastJsonDiffFn, args);
+        addBenchmark('just-diff', justDiffFn, args);
+        addBenchmark('json-diff', jsonDiffFn, args);
+        addBenchmark('fast-json-patch', fastJsonPatchCompareFn, args);
     });
 
 });
