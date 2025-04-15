@@ -4,10 +4,10 @@
 - **Recursive Descent:** Traverse both JSON objects simultaneously.
 - **Object Diffing:** Compare keys. Identify added, removed, and potentially modified keys. Recurse for modified keys.
 - **Array Diffing:** Identify cheapest sequence of operations (add, remove, replace) to transform source array to target array. This is a critical area for optimization. Potential algorithms to investigate:
-    - Longest Common Subsequence (LCS) based approaches (e.g., Myers diff).
-    - Heuristics for simple cases (e.g., pure additions/removals at ends).
-- **Value Diffing:** Direct comparison for primitive types.
-- **Path Generation:** Maintain the JSON Pointer path during traversal.
+    - **Chosen Algorithm:** Longest Common Subsequence (LCS) based approach, specifically Myers diff algorithm (O(ND) complexity), aiming for both speed and reasonably minimal patches. To be implemented in a dedicated module (e.g., `src/arrayDiff.ts`).
+    - Heuristics for simple cases (e.g., pure additions/removals at ends) can be considered as pre-checks to potentially bypass the full Myers algorithm for trivial cases.
+- **Value Diffing:** Direct comparison for primitive types. Recursive call to `compareValues` for nested structures within common array elements identified by LCS.
+- **Path Generation:** Maintain the JSON Pointer path during traversal using helper functions (`src/path.ts`).
 
 ## 2. Performance Optimization Strategies
 - **Minimize Object Allocations:** Reuse patch operation objects where possible.

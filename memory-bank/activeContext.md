@@ -1,28 +1,19 @@
 # Active Context: zen-json-patch
 
 ## Current Focus
-- Prepare for implementing array diffing logic.
-- Commit current progress.
+- Add initial unit tests.
+- Commit Myers diff implementation.
 
-## Recent Changes
-- Created `src/types.ts` with JSON Patch operation interfaces.
-- Created `src/path.ts` with JSON Pointer helper functions.
-- Implemented basic recursive structure in `src/index.ts` (`diff`, `compareValues`, `compareObjects`).
-- Added naive placeholder for `compareArrays`.
-- Installed dev dependencies: `typescript`, `@types/node`.
-- Fixed TS errors related to `console` and function order.
-
+- Implemented Myers diff algorithm (with prefix/suffix optimization) in `src/arrayDiff.ts`.
+- Refactored array diff logic into `src/arrayDiff.ts`.
+- Fixed multiple TypeScript errors in the Myers implementation.
 
 ## Next Steps
-- Commit current code structure.
-- Research and select an efficient array diffing algorithm (e.g., LCS/Myers diff).
-- Implement the chosen array diffing algorithm in `compareArrays`.
-- Add basic unit tests for existing functionality (object diffing, path helpers).
-
-## Active Decisions
-- Project name: `zen-json-patch`
-- Language: TypeScript
-- Core goal: Extreme performance for JSON Patch generation.
+- Commit Myers diff implementation.
+- Install a testing framework (e.g., `vitest`).
+- Add basic unit tests for path helpers (`src/path.ts`).
+- Add basic unit tests for object comparison (`src/index.ts`).
+- Add basic unit tests for array comparison (`src/arrayDiff.ts`), starting with simple cases.
 
 ## Blockers
 - None currently.
