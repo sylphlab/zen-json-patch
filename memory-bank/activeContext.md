@@ -1,23 +1,23 @@
 # Active Context: zen-json-patch
 
 ## Current Focus
-- Initial project setup.
-- Establishing the Memory Bank structure.
+- Prepare for implementing array diffing logic.
+- Commit current progress.
 
 ## Recent Changes
-- Created `memory-bank` directory.
-- Created `memory-bank/projectbrief.md`.
-- Created `memory-bank/productContext.md`.
+- Created `src/types.ts` with JSON Patch operation interfaces.
+- Created `src/path.ts` with JSON Pointer helper functions.
+- Implemented basic recursive structure in `src/index.ts` (`diff`, `compareValues`, `compareObjects`).
+- Added naive placeholder for `compareArrays`.
+- Installed dev dependencies: `typescript`, `@types/node`.
+- Fixed TS errors related to `console` and function order.
+
 
 ## Next Steps
-- Create remaining Memory Bank files:
-    - `memory-bank/systemPatterns.md`
-    - `memory-bank/techContext.md`
-    - `memory-bank/progress.md`
-    - `memory-bank/.clinerules`
-- Initialize TypeScript project structure (`npm`, `tsconfig.json`, `src/`).
-- Initialize Git repository.
-- Make initial commit.
+- Commit current code structure.
+- Research and select an efficient array diffing algorithm (e.g., LCS/Myers diff).
+- Implement the chosen array diffing algorithm in `compareArrays`.
+- Add basic unit tests for existing functionality (object diffing, path helpers).
 
 ## Active Decisions
 - Project name: `zen-json-patch`

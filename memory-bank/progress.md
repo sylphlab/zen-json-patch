@@ -1,14 +1,13 @@
 # Progress Tracker: zen-json-patch
 
 ## Current Status
-- Initial project setup phase.
-- Memory Bank structure established.
+- Core diffing logic implementation phase starting.
 
 ## What Works
-- Memory Bank file creation in progress.
+- Initial project structure set up (npm, TS, Git).
+- Memory Bank initialized.
 
 ## What's Left (High Level)
-- Complete initial project setup (npm, tsconfig, git).
 - Implement core diffing logic (recursive descent).
 - Implement object diffing.
 - Implement optimized array diffing (research required).
@@ -25,9 +24,6 @@
 - None.
 
 ## Immediate Next Steps (from activeContext.md)
-- Create `memory-bank/.clinerules`.
-- Initialize TypeScript project (`npm init -y`).
-- Configure `tsconfig.json`.
-- Create `src/` directory.
-- Initialize Git repository (`git init`).
-- Make initial commit.
+- Define core types (`src/types.ts`).
+- Define main API function signature (`src/index.ts`).
+- Implement basic recursive traversal structure.
