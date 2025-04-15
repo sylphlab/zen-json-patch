@@ -1,0 +1,26 @@
+[
+  {
+    "name": "zen-json-patch",
+    "path": "src/index.ts",
+    "import": "{ diff }",
+    "limit": "5 kB"
+  },
+  {
+    "name": "fast-json-diff",
+    "path": "node_modules/fast-json-diff/dist/fast-json-diff.js",
+    "import": "{ diff }",
+    "limit": "10 kB"
+  },
+  {
+    "name": "just-diff",
+    "path": "node_modules/just-diff/index.mjs",
+    "import": "{ diff }",
+    "limit": "10 kB"
+  },
+  {
+    "name": "fast-json-patch",
+    "path": "node_modules/fast-json-patch/index.mjs",
+    "import": "{ compare }",
+    "limit": "10 kB"
+  }
+]

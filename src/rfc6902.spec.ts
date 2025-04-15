@@ -28,21 +28,13 @@ describe('RFC 6902 Appendix A Examples', () => {
   });
 
   // A.2. Adding an Array Element
-  it('A.2. Adding an Array Element (EXPECT FAIL - Naive Diff)', () => {
-    const doc = { "foo": [ "bar", "baz" ] };
-    const target = { "foo": [ "bar", "qux", "baz" ] };
-    // Correct expected patch for a performant diff
-    const expectedPatch: Operation[] = [
-       { "op": "add", "path": "/foo/1", "value": "qux" }
-    ];
-    // Naive diff (length change) will produce:
-    const naiveExpectedPatch: Operation[] = [
-        { "op": "replace", "path": "/foo", "value": [ "bar", "qux", "baz" ] }
-    ];
-    // Expect the naive result for now
-    expect(sortOps(diff(doc, target))).toEqual(sortOps(naiveExpectedPatch));
-    // Mark test as potentially needing update later
-    // expect(sortOps(diff(doc, target)), '[TODO: Expect precise add op later]').toEqual(sortOps(expectedPatch));
+  it('A.2. Adding an Array Element', () => {
+      const doc = { "foo": [ "bar", "baz" ] };
+      const target = { "foo": [ "bar", "qux", "baz" ] };
+      const expectedPatch: Operation[] = [
+         { "op": "add", "path": "/foo/1", "value": "qux" }
+      ];
+      expect(sortOps(diff(doc, target))).toEqual(sortOps(expectedPatch));
   });
 
   // A.3. Removing an Object Member
@@ -56,19 +48,13 @@ describe('RFC 6902 Appendix A Examples', () => {
   });
 
   // A.4. Removing an Array Element
-  it('A.4. Removing an Array Element (EXPECT FAIL - Naive Diff)', () => {
-    const doc = { "foo": [ "bar", "qux", "baz" ] };
-    const target = { "foo": [ "bar", "baz" ] };
-    // Correct expected patch
-    const expectedPatch: Operation[] = [
-      { "op": "remove", "path": "/foo/1" }
-    ];
-     // Naive diff (length change) will produce:
-     const naiveExpectedPatch: Operation[] = [
-        { "op": "replace", "path": "/foo", "value": [ "bar", "baz" ] }
-    ];
-    expect(sortOps(diff(doc, target))).toEqual(sortOps(naiveExpectedPatch));
-    // expect(sortOps(diff(doc, target)), '[TODO: Expect precise remove op later]').toEqual(sortOps(expectedPatch));
+  it('A.4. Removing an Array Element', () => {
+      const doc = { "foo": [ "bar", "qux", "baz" ] };
+      const target = { "foo": [ "bar", "baz" ] };
+      const expectedPatch: Operation[] = [
+        { "op": "remove", "path": "/foo/1" }
+      ];
+      expect(sortOps(diff(doc, target))).toEqual(sortOps(expectedPatch));
   });
 
   // A.5. Replacing a Value
@@ -115,12 +101,13 @@ describe('RFC 6902 Appendix A Examples', () => {
      // Let's refine the naive expectation based on the code:
      // idx 0: all === all -> ok
      // idx 1: grass !== cows -> replace /foo/1 with cows
-     // idx 2: cows !== eat -> replace /foo/2 with eat
-     // idx 3: eat !== grass -> replace /foo/3 with grass
+     // idx 2: cows !== eat -> remove /foo/1 (grass)
+     // idx 3: eat !== grass -> add /foo/3 (grass)
+     // The current naive diff seems to detect the removal and addition
      const actualNaiveExpected: Operation[] = [
-        { "op": "replace", "path": "/foo/1", "value": "cows" },
-        { "op": "replace", "path": "/foo/2", "value": "eat" },
-        { "op": "replace", "path": "/foo/3", "value": "grass" },
+        { "op": "remove", "path": "/foo/1" }, // remove 'grass'
+        // 'cows' and 'eat' shift left
+        { "op": "add", "path": "/foo/3", "value": "grass" } // add 'grass' at the end
      ];
 
     expect(sortOps(diff(doc, target))).toEqual(sortOps(actualNaiveExpected));
@@ -147,34 +134,22 @@ describe('RFC 6902 Appendix A Examples', () => {
 
   // A.12. Adding ~ and / Characters
    it('A.12. Adding ~ and / Characters', () => {
-    const doc = { "foo": ["bar"] };
-    const target = { "foo": ["bar", "baz/~1"] }; // Target value is literally "baz/~1"
-    // Correct expected patch
-    const expectedPatch: Operation[] = [
-      { "op": "add", "path": "/foo/1", "value": "baz/~1" }
-    ];
-    // Naive diff (length change) will produce:
-     const naiveExpectedPatch: Operation[] = [
-        { "op": "replace", "path": "/foo", "value": ["bar", "baz/~1"] }
-    ];
-    expect(sortOps(diff(doc, target))).toEqual(sortOps(naiveExpectedPatch));
-    // expect(sortOps(diff(doc, target)), '[TODO: Expect precise add op later]').toEqual(sortOps(expectedPatch));
+      const doc = { "foo": ["bar"] };
+      const target = { "foo": ["bar", "baz/~1"] };
+      const expectedPatch: Operation[] = [
+        { "op": "add", "path": "/foo/1", "value": "baz/~1" }
+      ];
+      expect(sortOps(diff(doc, target))).toEqual(sortOps(expectedPatch));
    });
 
    // A.13. Adding an Array Value using "-"
     it('A.13. Adding an Array Value using "-" (Append)', () => {
         const doc = { "foo": ["bar"] };
         const target = { "foo": ["bar", "baz"] };
-        // Correct expected patch (append is like add at next index)
         const expectedPatch: Operation[] = [
-        { "op": "add", "path": "/foo/1", "value": "baz" } // Index '1' is the next available
+        { "op": "add", "path": "/foo/1", "value": "baz" }
         ];
-         // Naive diff (length change) will produce:
-        const naiveExpectedPatch: Operation[] = [
-            { "op": "replace", "path": "/foo", "value": ["bar", "baz"] }
-        ];
-        expect(sortOps(diff(doc, target))).toEqual(sortOps(naiveExpectedPatch));
-        // expect(sortOps(diff(doc, target)), '[TODO: Expect precise add op later]').toEqual(sortOps(expectedPatch));
+        expect(sortOps(diff(doc, target))).toEqual(sortOps(expectedPatch));
     });
 
   // More test cases can be added here, especially complex array changes

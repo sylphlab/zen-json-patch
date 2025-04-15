@@ -9,7 +9,8 @@
     "test:watch": "vitest",
     "build": "tsup src/index.ts --format esm,cjs --minify --sourcemap --dts",
     "bench": "vitest bench --run",
-    "prepublishOnly": "npm run build"
+    "size": "npm run build && size-limit",
+    "prepublishOnly": "npm run build && npm run size"
   },
   "keywords": [
     "json",
@@ -23,6 +24,8 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@size-limit/esbuild": "^11.2.0",
+    "@size-limit/file": "^11.2.0",
     "@types/node": "^22.14.1",
     "deep-diff": "^1.0.2",
     "fast-json-diff": "^0.0.6",
@@ -31,6 +34,7 @@
     "jsondiffpatch": "^0.7.3",
     "just-diff": "^6.0.2",
     "rfc6902": "^5.1.2",
+    "size-limit": "^11.2.0",
     "tsup": "^8.4.0",
     "typescript": "^5.8.3",
     "vitest": "^3.1.1"

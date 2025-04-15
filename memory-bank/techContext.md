@@ -34,3 +34,14 @@
 ```json
 {
 }
+
+## 6. Bundle Size History (Brotli + Minified)
+*   **2025-04-15 (Initial + Naive Array Diff - Build Output):**
+    *   `dist/index.js`: 392 B
+    *   `dist/index.cjs`: 634 B
+*   **2025-04-15 (Comparison via `import` - Min+Brotli):**
+    *   `zen-json-patch` (`{diff}`): 376 B
+    *   `just-diff` (`{diff}`): 635 B
+    *   `fast-json-diff` (`{diff}`): 780 B
+    *   `fast-json-patch` (`{compare}`): 3.33 kB
+    *   (`json-diff` excluded due to build issues with Node.js dependencies in size-limit)

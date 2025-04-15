@@ -1,6 +1,6 @@
-import { Operation, AddOperation, RemoveOperation, ReplaceOperation } from './types';
-import { appendPath } from './path';
-import { compareArrays } from './arrayDiff'; // Import compareArrays
+import { Operation, AddOperation, RemoveOperation, ReplaceOperation } from './types.js';
+import { appendPath } from './path.js';
+import { compareArrays } from './arrayDiff.js'; // Import compareArrays
 
 /**
  * Compares two JSON-compatible objects and generates an array of JSON Patch operations (RFC 6902).
