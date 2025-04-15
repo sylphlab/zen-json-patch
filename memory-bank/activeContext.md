@@ -1,20 +1,21 @@
 # Active Context: zen-json-patch
 
 ## Current Focus
-- Commit naive array diff implementation and adjusted tests.
-- Add integration tests based on RFC 6902 examples.
+- Commit integration tests.
+- Set up benchmarking framework.
 
 ## Recent Changes
-- Installed testing framework (`vitest`).
-- Configured `package.json` scripts and metadata.
-- Added unit tests for path helpers (`src/path.spec.ts`) and ran successfully.
-- Added unit tests for object comparison (`src/index.spec.ts`) and ran successfully.
-- Attempted to implement Myers diff, encountered issues, reverted to a very naive array diff (`src/arrayDiff.ts`).
+- Replaced Myers diff attempt with a very naive array diff (`src/arrayDiff.ts`).
 - Adjusted array diff tests (`src/arrayDiff.spec.ts`) to pass with the naive implementation.
+- Committed naive array diff and adjusted tests.
+- Added integration tests based on RFC 6902 examples (`src/rfc6902.spec.ts`).
+- Ran integration tests; they pass based on the naive array diff behavior (generating 'replace' for array changes).
 
 ## Next Steps
-- Commit naive array diff implementation and adjusted tests.
-- Add integration tests using RFC 6902 examples (`src/rfc6902.spec.ts`).
+- Commit integration tests.
+- Install benchmarking library (e.g., `benchmark`).
+- Create initial benchmark setup (`bench/`).
+- Create basic benchmark comparing current implementation against `fast_json_diff` for simple object changes.
 - **TODO (Performance):** Revisit and implement a correct and performant array diffing algorithm (e.g., optimized Myers diff) later, replacing the naive version.
 
 ## Active Decisions
