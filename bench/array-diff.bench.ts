@@ -10,7 +10,6 @@ import('fast-json-diff').then((module: { diff?: (a: any, b: any) => any[] }) => 
     }
 }).catch(e => {
     // Silent failure if fast-json-diff not installed
-    // console.warn("Could not load fast-json-diff for comparison:", e); // Optional logging
 });
 
 // Helper to conditionally add fastDiff benchmarks
@@ -65,76 +64,80 @@ for (let i = midPoint - shuffleRange; i < midPoint + shuffleRange; i++) {
     }
 }
 
-
 // --- Benchmark Structure ---
-// Grouping benchmarks by scenario type for meaningful comparisons.
-// NOTE: Current zenDiff array implementation is naive. Benchmarks tagged [Naive]
-//       reflect this expectation. `fastDiff` comparisons tagged [Naive Compare]
-//       are included to see how a non-naive algo handles the same input,
-//       even though zenDiff's *current* approach differs fundamentally.
+// Grouping each zenDiff vs fastDiff pair in its own describe block
+// for direct fastest/slowest comparison on the same task.
 
-describe('Array Diff Comparison', () => {
+describe('Array Diff Benchmarks', () => {
 
-    describe('Scenario: Simple Length Changes (Naive Replace Expected)', () => {
-        bench('[Naive] zenDiff - Add Few End', () => {
+    describe('[Simple Length Change] Add Few End', () => {
+        bench('[Naive] zenDiff', () => {
             zenDiff(arrSimple1, arrSimpleAdd);
         });
-        addFastDiffBench('[Naive Compare] fastDiff - Add Few End', () => {
+        addFastDiffBench('[Naive Compare] fastDiff', () => {
             fastDiff!(arrSimple1, arrSimpleAdd);
         });
+    });
 
-        bench('[Naive] zenDiff - Remove Few End', () => {
+    describe('[Simple Length Change] Remove Few End', () => {
+        bench('[Naive] zenDiff', () => {
             zenDiff(arrSimple1, arrSimpleRemove);
         });
-        addFastDiffBench('[Naive Compare] fastDiff - Remove Few End', () => {
+        addFastDiffBench('[Naive Compare] fastDiff', () => {
             fastDiff!(arrSimple1, arrSimpleRemove);
         });
     });
 
-    describe('Scenario: Internal Changes (Same Length)', () => {
-        bench('zenDiff - Simple Replace', () => {
+    describe('[Simple Internal] Replace', () => {
+        bench('zenDiff', () => {
             zenDiff(arrInternal1, arrInternalReplace);
         });
-        addFastDiffBench('fastDiff - Simple Replace', () => {
+        addFastDiffBench('fastDiff', () => {
             fastDiff!(arrInternal1, arrInternalReplace);
         });
+    });
 
-        bench('[Naive] zenDiff - Simple Shuffle', () => { // Naive generates many replaces
+    describe('[Simple Internal] Shuffle', () => {
+        bench('[Naive] zenDiff', () => { // Naive generates many replaces
             zenDiff(arrInternal1, arrInternalShuffle);
         });
-        addFastDiffBench('[Naive Compare] fastDiff - Simple Shuffle', () => { // fast-diff likely smarter
+        addFastDiffBench('[Naive Compare] fastDiff', () => { // fast-diff likely smarter
             fastDiff!(arrInternal1, arrInternalShuffle);
         });
     });
 
-    describe('Scenario: Large Array - Length Changes (Naive Replace Expected)', () => {
-        bench('[Naive] zenDiff - Add Many End', () => {
-            zenDiff(largeArr1, largeArr2_AddEnd);
-        });
-        addFastDiffBench('[Naive Compare] fastDiff - Add Many End', () => {
-            fastDiff!(largeArr1, largeArr2_AddEnd);
-        });
+    describe('[Large Length Change] Add Many End', () => {
+         bench('[Naive] zenDiff', () => {
+           zenDiff(largeArr1, largeArr2_AddEnd);
+         });
+         addFastDiffBench('[Naive Compare] fastDiff', () => {
+           fastDiff!(largeArr1, largeArr2_AddEnd);
+         });
+    });
 
-        bench('[Naive] zenDiff - Remove Many End', () => {
-            zenDiff(largeArr1, largeArr2_RemoveEnd);
+    describe('[Large Length Change] Remove Many End', () => {
+         bench('[Naive] zenDiff', () => {
+           zenDiff(largeArr1, largeArr2_RemoveEnd);
+         });
+         addFastDiffBench('[Naive Compare] fastDiff', () => {
+           fastDiff!(largeArr1, largeArr2_RemoveEnd);
+         });
+    });
+
+     describe('[Large Internal] Replace Middle', () => {
+        bench('zenDiff', () => {
+            zenDiff(largeArr1, largeArr2_ReplaceMid);
         });
-        addFastDiffBench('[Naive Compare] fastDiff - Remove Many End', () => {
-            fastDiff!(largeArr1, largeArr2_RemoveEnd);
+        addFastDiffBench('fastDiff', () => {
+            fastDiff!(largeArr1, largeArr2_ReplaceMid);
         });
     });
 
-    describe('Scenario: Large Array - Internal Changes (Same Length)', () => {
-        bench('zenDiff - Replace Middle', () => {
-            zenDiff(largeArr1, largeArr2_ReplaceMid);
-        });
-        addFastDiffBench('fastDiff - Replace Middle', () => {
-            fastDiff!(largeArr1, largeArr2_ReplaceMid);
-        });
-
-        bench('[Naive] zenDiff - Shuffle Middle', () => { // Naive generates many replaces
+    describe('[Large Internal] Shuffle Middle', () => {
+        bench('[Naive] zenDiff', () => { // Naive generates many replaces
             zenDiff(largeArr1, largeArr2_ShuffleMid);
         });
-        addFastDiffBench('[Naive Compare] fastDiff - Shuffle Middle', () => { // fast-diff likely smarter
+        addFastDiffBench('[Naive Compare] fastDiff', () => { // fast-diff likely smarter
             fastDiff!(largeArr1, largeArr2_ShuffleMid);
         });
     });
